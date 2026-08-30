@@ -36,9 +36,15 @@ def load_model():
             features = pickle.load(f)
         with open("model/model_info.pkl", "rb") as f:
             info = pickle.load(f)
-        return model, features, info
+        scaler = None
+        try:
+            with open("model/scaler.pkl", "rb") as f:
+                scaler = pickle.load(f)
+        except FileNotFoundError:
+            pass
+        return model, features, info, scaler
     except FileNotFoundError:
-        return None, None, None
+        return None, None, None, None
 
 # ── Fetch AQI for any city ───────────────────────────────────
 @st.cache_data(ttl=3600)
@@ -53,7 +59,7 @@ def fetch_city(city):
         return None, str(e)
 
 # ── Build feature row for prediction ─────────────────────────
-def build_feature_row(raw, target_date, feature_cols):
+def build_feature_row(raw, target_date, feature_cols, feature_means=None):
     iaqi = raw.get("iaqi", {})
     def g(k): return iaqi.get(k, {}).get("v", np.nan)
     all_vals = {
@@ -73,7 +79,14 @@ def build_feature_row(raw, target_date, feature_cols):
         "aqi_rolling_7d": raw.get("aqi", np.nan),
     }
     row = {col: all_vals.get(col, np.nan) for col in feature_cols}
-    df  = pd.DataFrame([row]).fillna(0)
+    df  = pd.DataFrame([row])
+    # Fill any missing/NaN values with the mean seen during training,
+    # rather than 0 — a raw 0 for e.g. missing pollutant data badly
+    # skews scaled linear models (like Ridge) toward garbage predictions.
+    means = feature_means or {}
+    for col in feature_cols:
+        if df[col].isnull().any():
+            df[col] = df[col].fillna(means.get(col, 0))
     return df[feature_cols]
 
 # ════════════════════════════════════════════════════════════
@@ -161,7 +174,7 @@ st.markdown("---")
 # ── 3-DAY FORECAST ───────────────────────────────────────────
 st.subheader("📅 3-Day AQI Forecast")
 
-model, feature_cols, model_info = load_model()
+model, feature_cols, model_info, scaler = load_model()
 
 if model is None:
     st.info("Model not found. Make sure model/best_model.pkl exists.")
@@ -169,8 +182,13 @@ else:
     forecast_rows = []
     for day_offset in range(1, 4):
         target_date = datetime.now() + timedelta(days=day_offset)
-        feat_df     = build_feature_row(raw, target_date, feature_cols)
-        predicted   = float(model.predict(feat_df)[0])
+        feat_df     = build_feature_row(raw, target_date, feature_cols, model_info.get("feature_means") if model_info else None)
+        model_name  = model_info.get("name", "") if model_info else ""
+        if scaler is not None and "Ridge" in model_name:
+            feat_input = scaler.transform(feat_df)
+        else:
+            feat_input = feat_df
+        predicted   = float(model.predict(feat_input)[0])
         predicted   = max(0, round(predicted, 1))
         lbl, clr    = aqi_info(predicted)
         forecast_rows.append({

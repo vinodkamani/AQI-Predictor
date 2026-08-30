@@ -11,7 +11,7 @@
 
 This project builds a fully automated, serverless system that predicts the Air Quality Index (AQI) for any city in the world for the next 3 days. The system collects live pollution data every hour, trains a machine learning model daily, and displays forecasts on an interactive web dashboard accessible to anyone via a public link.
 
-**Live Dashboard:** https://aqi-predictor-rv8nqd6ybmmwhbv7gmda7j.streamlit.app/
+**Live Dashboard:** https://aqi-predictor-mhn5gfhw3wxatuccku7js8.streamlit.app/
 
 ---
 
@@ -146,7 +146,7 @@ This means the system fully updates itself with zero manual effort from the deve
 
 Built using Streamlit and deployed free on Streamlit Cloud.
 
-**Live URL:** https://aqi-predictor-rv8nqd6ybmmwhbv7gmda7j.streamlit.app/
+**Live URL:** https://aqi-predictor-mhn5gfhw3wxatuccku7js8.streamlit.app/
 
 ### Dashboard Features
 

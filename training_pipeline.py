@@ -136,6 +136,7 @@ with open("model/model_info.pkl", "wb") as f:
         "r2":         results[best_name]["r2"],
         "trained_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
         "features":   FEATURE_COLS,
+        "feature_means": X.mean().to_dict(),
     }, f)
 
 print("\n" + "="*55)

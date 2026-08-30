@@ -2,7 +2,7 @@
 
 A fully automated, serverless Air Quality Index (AQI) prediction system that collects live pollution data every hour, trains a machine learning model daily, and displays a 3-day forecast for any city in the world on an interactive web dashboard.
 
-**🔗 Live Dashboard:** https://aqi-predictor-rv8nqd6ybmmwhbv7gmda7j.streamlit.app/
+**🔗 Live Dashboard:** https://aqi-predictor-mhn5gfhw3wxatuccku7js8.streamlit.app/
 
 ---
 
@@ -130,8 +130,8 @@ The system updates itself with zero manual effort.
 
 **1. Clone the repository**
 ```bash
-git clone https://github.com/SumeetJani/aqi-predictor.git
-cd aqi-predictor
+git clone https://github.com/vinodkamani/AQI-Predictor.git
+cd AQI-Predictor
 ```
 
 **2. Install dependencies**
