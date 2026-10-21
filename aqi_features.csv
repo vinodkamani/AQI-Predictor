@@ -1942,3 +1942,4 @@ timestamp,city,aqi,aqi_category,pm25,pm10,o3,no2,so2,co,temperature,humidity,win
 2026-10-20 18:18:46,karachi,161,Unhealthy,161,,,,,,31.0,3.0,5.1,18,1,10,0
 2026-10-20 22:03:59,karachi,161,Unhealthy,161,,,,,,31.0,3.0,5.1,22,1,10,0
 2026-10-21 01:15:04,karachi,161,Unhealthy,161,,,,,,31.0,3.0,5.1,1,2,10,0
+2026-10-21 07:00:30,karachi,161,Unhealthy,161,,,,,,31.0,3.0,5.1,7,2,10,0
